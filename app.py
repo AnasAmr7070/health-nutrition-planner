@@ -5,30 +5,77 @@ from reportlab.pdfgen import canvas
 import io
 
 st.set_page_config(
-    page_title="Health & Nutrition Planner v4.0",
-    page_icon="🏋️",
+    page_title="Elite Fitness & Nutrition Suite Pro",
+    page_icon="⚡",
     layout="centered"
 )
 
-st.title("🏋️ HEALTH & NUTRITION SMART PLANNER v4.0")
-st.caption("All-in-one assistant for calories, food database, ideal weight, supplements, and 1RM calculation.")
+# =========================================================
+# Custom Luxury CSS Styling
+# =========================================================
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #0b0f19;
+        color: #f8fafc;
+    }
+    .main-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #38bdf8, #4ade80);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: 0px;
+    }
+    .sub-title {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 1.05rem;
+        margin-bottom: 25px;
+    }
+    .stButton > button {
+        background: linear-gradient(90deg, #0284c7, #0369a1);
+        color: white;
+        border-radius: 10px;
+        border: none;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #38bdf8, #0284c7);
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+    div[data-testid="stMetricValue"] {
+        color: #38bdf8;
+        font-weight: 700;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('<p class="main-title">⚡ ELITE FITNESS & NUTRITION SUITE</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title">Discipline, Power & Aesthetic Mastery - Your Ultimate Professional Hub.</p>', unsafe_allow_html=True)
 
 st.divider()
 
-# إضافة التبويب الخامس لحاسبة 1RM
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📊 Calorie & Macro Calculator", 
-    "🔍 Food Database", 
-    "⚖️ Ideal Weight Check", 
-    "💊 Supplement Dosage",
-    "🏋️‍♂️ 1RM Strength Calculator"
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+    "📊 Calories", 
+    "🔍 Food DB", 
+    "⚖️ Ideal Wt", 
+    "💊 Supps",
+    "🏋️‍♂️ 1RM",
+    "💪 Workouts",
+    "📈 TDEE",
+    "🧊 Body Fat",
+    "💧 Hydration",
+    "🥗 Swapper"
 ])
 
 # =========================================================
-# التبويب الأول: السعرات + الرسم البياني + ملف PDF
+# Tab 1: Calories, Chart & PDF Export
 # =========================================================
 with tab1:
-    st.header("Daily Calories, Macros & Water Calculator")
+    st.markdown("### 📊 Daily Calories, Macros & Water Calculator")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -43,7 +90,7 @@ with tab1:
             "3. Bulk (Muscle Gain)"
         ])
 
-    if st.button("Calculate Targets 🚀", type="primary", use_container_width=True):
+    if st.button("Calculate Targets 🚀", use_container_width=True, key="btn_t1"):
         try:
             weight = float(weight_input)
             height = float(height_input)
@@ -84,20 +131,19 @@ with tab1:
             st.divider()
             st.subheader("📊 Macros Distribution Chart")
             
-            # رسم بياني دائرى للمكروز
             chart_data = {
                 "Macro": ["Protein", "Carbs", "Fats"],
                 "Grams": [protein, carbs, fats]
             }
             fig = px.pie(chart_data, values="Grams", names="Macro", color="Macro",
-                         color_discrete_map={"Protein": "#FF4B4B", "Carbs": "#1C83E1", "Fats": "#00C0F2"})
+                         color_discrete_map={"Protein": "#38bdf8", "Carbs": "#4ade80", "Fats": "#f43f5e"})
+            fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#fff")
             st.plotly_chart(fig, use_container_width=True)
 
-            # إنزال التقرير بصيغة PDF
             buffer = io.BytesIO()
             p = canvas.Canvas(buffer, pagesize=letter)
             p.setFont("Helvetica-Bold", 16)
-            p.drawString(100, 750, "Health & Nutrition Planner - Summary Report")
+            p.drawString(100, 750, "Elite Fitness Planner - Summary Report")
             p.setFont("Helvetica", 12)
             p.drawString(100, 720, f"Goal: {goal_name}")
             p.drawString(100, 700, f"Daily Calories: {target_calories:.0f} kcal")
@@ -120,11 +166,11 @@ with tab1:
             st.error("Please enter valid numbers for Weight, Height, and Age.")
 
 # =========================================================
-# التبويب الثاني: البحث في قاعدة البيانات
+# Tab 2: Food Database
 # =========================================================
 with tab2:
-    st.header("Search Food Database (20+ Items)")
-    search_query = st.text_input("Enter food item to search (e.g., chicken, oats, eggs, tuna):").strip().lower()
+    st.markdown("### 🔍 Search Food Database (Protein & Calories)")
+    search_query = st.text_input("Enter food item to search (e.g., chicken, oats, eggs, tuna):", key="t2_search").strip().lower()
 
     if search_query:
         st.subheader("Search Results:")
@@ -159,13 +205,13 @@ with tab2:
             st.error(f"No item found for '{search_query}' in local database.")
 
 # =========================================================
-# التبويب الثالث: حاسبة الوزن المثالي
+# Tab 3: Ideal Weight
 # =========================================================
 with tab3:
-    st.header("Ideal Weight Range Calculator")
+    st.markdown("### ⚖️ Ideal Weight Range Calculator")
     bmi_height_input = st.text_input("Enter height in cm:", value="175", key="t3_height_text")
 
-    if st.button("Calculate Ideal Weight Range ⚖️", use_container_width=True):
+    if st.button("Calculate Ideal Weight Range ⚖️", use_container_width=True, key="btn_t3"):
         try:
             bmi_height = float(bmi_height_input)
             height_m = bmi_height / 100
@@ -179,10 +225,10 @@ with tab3:
             st.error("Please enter a valid number for height.")
 
 # =========================================================
-# التبويب الرابع: جرعات المكملات
+# Tab 4: Supplement Dosage
 # =========================================================
 with tab4:
-    st.header("Supplement Dosage Calculator (Age 16+)")
+    st.markdown("### 💊 Supplement Dosage Calculator (Age 16+)")
     supp_age_input = st.text_input("Enter your age:", value="18", key="t4_age_text")
 
     try:
@@ -194,7 +240,7 @@ with tab4:
             supp_weight_input = st.text_input("Enter your weight in kg:", value="75", key="t4_weight_text")
             training = st.radio("Do you practice resistance/weight training?", ["yes", "no"], key="t4_training")
 
-            if st.button("Get Supplement Dosage 💊", use_container_width=True):
+            if st.button("Get Supplement Dosage 💊", use_container_width=True, key="btn_t4"):
                 supp_weight = float(supp_weight_input)
                 st.success("RECOMMENDED SUPPLEMENT DOSAGES")
 
@@ -213,16 +259,16 @@ with tab4:
         st.error("Please enter valid numbers.")
 
 # =========================================================
-# التبويب الخامس الجديد: حاسبة قوة التمرين (1RM)
+# Tab 5: 1RM Strength Calculator
 # =========================================================
 with tab5:
-    st.header("1RM Strength & Percentage Calculator")
+    st.markdown("### 🏋️‍♂️ 1RM Strength & Percentage Calculator")
     st.caption("Calculate your One-Rep Max based on the Epley Formula.")
 
     weight_lifted_input = st.text_input("Weight Lifted (kg):", value="80", key="t5_w")
     reps_input = st.text_input("Reps Performed:", value="5", key="t5_r")
 
-    if st.button("Calculate 1RM 🏋️‍♂️", use_container_width=True):
+    if st.button("Calculate 1RM 🏋️‍♂️", use_container_width=True, key="btn_t5"):
         try:
             w = float(weight_lifted_input)
             r = float(reps_input)
@@ -240,3 +286,178 @@ with tab5:
             st.write(f"• **70% (Endurance):** {one_rm * 0.70:.1f} kg")
         except ValueError:
             st.error("Please enter valid numbers for weight and reps.")
+
+# =========================================================
+# Tab 6: Workout Splits (8 Comprehensive Training Programs)
+# =========================================================
+with tab6:
+    st.markdown("### 💪 Advanced Workout Splits & Volume Guide")
+    st.caption("Choose from 8 professional training routines tailored for muscle hypertrophy and strength.")
+
+    split_choice = st.selectbox("Select Training Program", [
+        "1. Arnold Split (Chest/Back, Shoulders/Arms, Legs)",
+        "2. Push / Pull / Legs (PPL - 3 Days or 6 Days)",
+        "3. Upper / Lower Body Split (4 Days)",
+        "4. Bro Split / Body Part Split (5 Days)",
+        "5. Full Body Workout (3 Days - Beginner/Intermediate)",
+        "6. PHUL Routine (Power Hypertrophy Upper Lower)",
+        "7. Upper / Lower / PPL Hybrid (5 Days)",
+        "8. German Volume Training - GVT (10x10 Method)"
+    ], key="t6_split")
+
+    if "Arnold" in split_choice:
+        st.markdown("""
+        **🔥 Arnold Split (The Classic Legendary Routine):**
+        * **Day 1 & 4 (Chest & Back):** Bench Press, Incline DB Press, Pull-ups, Barbell Rows, Pullovers.
+        * **Day 2 & 5 (Shoulders & Arms):** Overhead Press, Lateral Raises, Barbell Curls, Skull Crushers.
+        * **Day 3 & 6 (Legs & Abs):** Squats, Romanian Deadlifts, Leg Press, Calf Raises, Hanging Leg Raises.
+        """)
+    elif "Push / Pull / Legs" in split_choice:
+        st.markdown("""
+        **⚡ PPL Routine (Push / Pull / Legs):**
+        * **Push Day:** Bench Press, Overhead Press, Incline Flyes, Triceps Pushdowns.
+        * **Pull Day:** Deadlifts / Barbell Rows, Lat Pulldowns, Face Pulls, Barbell Curls.
+        * **Legs Day:** Barbell Squats, Bulgarian Split Squats, Leg Curls, Standing Calf Raises.
+        """)
+    elif "Upper / Lower" in split_choice:
+        st.markdown("""
+        **🔄 Upper / Lower Split (Balanced 4-Day Frequency):**
+        * **Upper Day 1 & 2:** Bench Press, Bent-Over Rows, Overhead Press, Pull-ups, Biceps/Triceps supersets.
+        * **Lower Day 1 & 2:** Barbell Squats, Romanian Deadlifts, Leg Press, Seated Calf Raises.
+        """)
+    elif "Bro Split" in split_choice:
+        st.markdown("""
+        **🎯 Classic Bro Split (1 Muscle Group per Day):**
+        * **Day 1:** Chest | **Day 2:** Back | **Day 3:** Shoulders | **Day 4:** Arms (Biceps/Triceps) | **Day 5:** Legs.
+        """)
+    elif "Full Body" in split_choice:
+        st.markdown("""
+        **🟢 Full Body Routine (3 Days/Week):**
+        * Great for beginners or busy schedules. Focuses on compound movements: Squats, Bench Press, Rows, Overhead Press, and Deadlifts.
+        """)
+    elif "PHUL" in split_choice:
+        st.markdown("""
+        **⚡ PHUL Routine (Power Hypertrophy Upper Lower):**
+        * Combines strength (power days) with higher rep ranges (hypertrophy days) for maximum muscle growth.
+        """)
+    elif "Hybrid" in split_choice:
+        st.markdown("""
+        **🔗 Upper / Lower / PPL Hybrid (5 Days):**
+        * Upper Body, Lower Body, Push, Pull, Legs. An optimal blend of frequency and recovery.
+        """)
+    else:
+        st.markdown("""
+        **💥 German Volume Training (GVT - 10x10):**
+        * Advanced shock routine performing 10 sets of 10 reps on main compound lifts to force extreme muscle adaptation.
+        """)
+    
+    st.info("💡 **Volume Rule:** Aim for 10 to 20 working sets per muscle group weekly for optimal hypertrophy.")
+
+# =========================================================
+# Tab 7: Adaptive TDEE Tracker
+# =========================================================
+with tab7:
+    st.markdown("### 📈 Adaptive TDEE & Weight Plateau Breaker")
+    st.caption("Adjust your daily intake if your weight stalls over 2 weeks.")
+
+    curr_weight = st.text_input("Current Weight (kg):", value="75", key="t7_w")
+    current_cals = st.text_input("Current Daily Calories (kcal):", value="2500", key="t7_c")
+    weight_trend = st.selectbox("Weight status over the last 2 weeks:", [
+        "Dropping steadily (Good for Cut)",
+        "Stuck / Plateau (No change)",
+        "Gaining too fast"
+    ], key="t7_trend")
+
+    if st.button("Get Adaptive Advice 🔄", use_container_width=True, key="btn_t7"):
+        if "Stuck" in weight_trend:
+            st.warning("⚠️ **Plateau Detected!** Your body has adapted to your current calories.")
+            st.info("👉 **Action:** Drop your daily intake by **200 - 300 kcal** or increase daily steps by 2,000 steps.")
+        elif "Gaining" in weight_trend:
+            st.success("💡 You are in a caloric surplus. If bulking, this is normal. If cutting, reduce fats/carbs by 200 kcal.")
+        else:
+            st.success("✅ Your current caloric intake is optimal. Keep consistency!")
+
+# =========================================================
+# Tab 8: Body Fat & FFMI Calculator
+# =========================================================
+with tab8:
+    st.markdown("### 🧊 Body Fat Percentage & FFMI Estimator")
+    st.caption("Estimate your body composition and lean muscle mass index.")
+
+    b_weight = st.text_input("Weight (kg):", value="75", key="t8_w")
+    b_height = st.text_input("Height (cm):", value="175", key="t8_h")
+    b_waist = st.text_input("Waist Circumference (cm):", value="82", key="t8_waist")
+
+    if st.button("Calculate Body Composition 📊", use_container_width=True, key="btn_t8"):
+        try:
+            w = float(b_weight)
+            h = float(b_height)
+            waist = float(b_waist)
+
+            fat_mass = waist * 0.74 - w * 0.08 - 10
+            body_fat_pct = max(5.0, min(45.0, (fat_mass / w) * 100))
+            lean_mass = w * (1 - (body_fat_pct / 100))
+            ffmi = lean_mass / ((h / 100) ** 2)
+
+            st.success("ESTIMATED RESULTS")
+            st.metric("Estimated Body Fat", f"{body_fat_pct:.1f}%")
+            st.metric("Fat-Free Mass Index (FFMI)", f"{ffmi:.1f}")
+            
+            if ffmi > 22:
+                st.info("💪 Great muscular development (Advanced natural range).")
+            else:
+                st.info("📈 Keep building solid lean mass through progressive overload and high protein.")
+        except ValueError:
+            st.error("Please enter valid numeric measurements.")
+
+# =========================================================
+# Tab 9: Hydration & Supplement Timing
+# =========================================================
+with tab9:
+    st.markdown("### 💧 Smart Hydration Schedule & Supplement Timing")
+    st.caption("Optimize when to take your supplements and water throughout the day.")
+
+    st.markdown("""
+    ### ⏰ Supplement Timing Guide:
+    * **Creatine Monohydrate:** Any time of day consistently, preferably post-workout with carbs/water.
+    * **L-Citrulline / L-Arginine:** 30 to 45 minutes *before* your workout for maximum pump.
+    * **Whey Protein:** Post-workout or anytime you need to complete your daily protein target.
+    * **Omega-3 & Vitamins:** Taken with your largest meal containing healthy fats for better absorption.
+
+    ### 💧 Daily Water Distribution Schedule:
+    * **Morning (Upon waking):** 500 ml (Jumpstart metabolism)
+    * **Pre-Workout:** 300 - 400 ml
+    * **During Workout:** 150 ml every 15-20 minutes
+    * **Post-Workout & Evening:** Remainder of your calculated daily liters.
+    """)
+
+# =========================================================
+# Tab 10: Macro Swapper & Food Alternatives
+# =========================================================
+with tab10:
+    st.markdown("### 🥗 Food Alternative & Macro Swapper")
+    st.caption("Find clean protein or carb substitutes with similar nutritional value.")
+
+    source_food = st.selectbox("Select primary food item you want to swap:", [
+        "Chicken Breast (100g)",
+        "White Rice (100g cooked)",
+        "Oats (100g raw)",
+        "Lean Beef (100g)"
+    ], key="t10_food")
+
+    if st.button("Find Healthy Alternatives 🔄", use_container_width=True, key="btn_t10"):
+        st.success("RECOMMENDED ALTERNATIVES")
+        if "Chicken" in source_food:
+            st.write("• **Turkey Breast:** Similar high protein, very low fat.")
+            st.write("• **White Fish / Tilapia:** Excellent lean protein source.")
+            st.write("• **Canned Tuna in Water:** Quick and high protein alternative.")
+        elif "Rice" in source_food:
+            st.write("• **Sweet Potatoes:** Excellent clean complex carbs and fiber.")
+            st.write("• **Quinoa:** High protein grain alternative.")
+            st.write("• **Oats / Brown Rice:** Slow-digesting complex carbohydrates.")
+        elif "Oats" in source_food:
+            st.write("• **Sweet Potato & Eggs:** Great clean morning carbs.")
+            st.write("• **Brown Rice Cakes:** Fast digesting pre-workout carb source.")
+        else:
+            st.write("• **Chicken Breast:** High protein low fat substitute.")
+            st.write("• **Salmon / Shrimp:** Great alternative protein sources.")
